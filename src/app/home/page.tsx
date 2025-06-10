@@ -69,7 +69,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchLibraryBooks = async () => {
-      const res = await fetch("http://localhost:5000/api/books");
+      const res = await fetch("/api/books");
       const data = await res.json();
       setLibraryBooks(data);
     };
@@ -92,20 +92,17 @@ export default function HomePage() {
 
   const handleSaveBooks = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/books", {
+      await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedBooks),
       });
 
-      if (!res.ok) throw new Error("Failed to save books");
-
-      const savedBooks = await res.json();
-      setLibraryBooks((prev) => [...prev, ...savedBooks]);
+      setLibraryBooks([...libraryBooks, ...selectedBooks]);
       setSelectedBooks([]);
       setModalOpen(false);
     } catch (err) {
-      console.error("Error saving books:", err);
+      console.error("Failed to save books:", err);
     }
   };
 
